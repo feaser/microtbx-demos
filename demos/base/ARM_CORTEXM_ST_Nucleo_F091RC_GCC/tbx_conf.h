@@ -1,5 +1,5 @@
 /************************************************************************************//**
-* \file         tbx_conf.h
+* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC_GCC/tbx_conf.h
 * \brief        MicroTBX configuration header file.
 * \internal
 *----------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /************************************************************************************//**
-* \file         demos/ARMCM0_STM32F0_Nucleo_F091RC_GCC/analogfloat.c
+* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC_GCC/analogfloat.c
 * \brief        Floating analog input driver source file.
 * \internal
 *----------------------------------------------------------------------------------------
