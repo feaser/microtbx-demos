@@ -4,3 +4,6 @@
 [submodule "third_party/cmsis/core"]
 	path = third_party/cmsis/core
 	url = https://github.com/ARM-software/CMSIS_5.git
+[submodule "third_party/cmsis/device/st/f0"]
+	path = third_party/cmsis/device/st/f0
+	url = https://github.com/STMicroelectronics/cmsis_device_f0.git
