@@ -1,3 +1,6 @@
 [submodule "third_party/microtbx"]
 	path = third_party/microtbx
 	url = https://github.com/feaser/microtbx.git
+[submodule "third_party/cmsis/core"]
+	path = third_party/cmsis/core
+	url = https://github.com/ARM-software/CMSIS_5.git
