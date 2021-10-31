@@ -69,9 +69,7 @@ PROJ_FILES += $(wildcard ../../../third_party/cmsis/core/CMSIS/Core/Include/*.h)
 PROJ_FILES += $(wildcard ../../../third_party/cmsis/device/st/f0/Include/*.h)
 # Collect HAL sources
 PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Inc/*.h)
-PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Inc/Legacy/*.h)
 PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Src/*.c)
-PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Src/Legacy/*.c)
 PROJ_FILES := $(filter-out $(wildcard ../../../third_party/hal/st/f0/Src/*_template*.c), $(PROJ_FILES))
 
 
