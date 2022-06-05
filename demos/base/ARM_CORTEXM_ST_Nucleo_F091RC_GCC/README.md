@@ -27,4 +27,4 @@ Using the terminal, set the working directory to the directory that has the `mak
 make clean all
 ```
 
-This creates the `microtbx_demo.elf` executable in the `./binary` directory. This file can be programmed onto the ST Nucleo-F091RC board, using the on-board ST-Link debugger interface and with the help of the [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) software program.
+This creates the `microtbx_demo.elf` executable in the `./bin` directory. This file can be programmed onto the ST Nucleo-F091RC board, using the on-board ST-Link debugger interface and with the help of the [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) software program.
