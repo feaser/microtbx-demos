@@ -132,6 +132,4 @@ static uint32_t CustomSeedInitHandler(void)
 } /*** end of CustomSeedInitHandler ***/
 
 
-/*lint -esym(9045, struct itimerval) */
-/*lint -esym(9045, struct timezone) */
 /*********************************** end of main.c *************************************/
