@@ -1,5 +1,5 @@
 /************************************************************************************//**
-* \file         demos/base/LINUX_GCC/main.c
+* \file         demos/base/LINUX_PC_GCC/main.c
 * \brief        Demo program application source file.
 * \internal
 *----------------------------------------------------------------------------------------
