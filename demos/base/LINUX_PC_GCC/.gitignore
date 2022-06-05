@@ -1,5 +1,10 @@
+# Eclipse CDT workspace
 /.settings/
 .cproject
 .project
 *.launch
+
+# Visual Studio Code workspace
+*.code-workspace
+*.vscode/
 
