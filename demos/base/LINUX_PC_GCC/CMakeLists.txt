@@ -52,14 +52,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 #****************************************************************************************
 # Directories
 #****************************************************************************************
-# Set the output directory
-set (PROJECT_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../binary)
-
-# Set the output directory for the generic no-config case (e.g. with gcc)
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIRECTORY} )
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIRECTORY} )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_OUTPUT_DIRECTORY} )
-
 # Set MicroTBX related directory locations
 set(MICROTBX_BASE ${PROJECT_SOURCE_DIR}/../../../third_party/microtbx/source)
 set(MICROTBX_INCS

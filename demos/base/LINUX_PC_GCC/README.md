@@ -17,4 +17,4 @@ cmake ..
 make
 ```
 
-This creates the `microtbx_demo` executable in the `./binary` directory.
+This creates the `microtbx_demo` executable in the `./build` directory.
