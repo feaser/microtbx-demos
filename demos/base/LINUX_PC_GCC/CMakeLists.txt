@@ -31,17 +31,22 @@
 # \endinternal
 #****************************************************************************************
 # Specify the minimum version
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.9)
 
 
 #****************************************************************************************
 # Project configuration
 #****************************************************************************************
-# Specify the project name
-project(microtbx_demo)
+# Specify the project name and language
+project(microtbx_demo LANGUAGES C)
 
-# Build debug version by default
-set(CMAKE_BUILD_TYPE "Debug")
+
+#****************************************************************************************
+# Language configuration
+#****************************************************************************************
+# Set the required C standard.
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 
 #****************************************************************************************
@@ -67,7 +72,7 @@ set(MICROTBX_INCS
 # Compiler flags
 #****************************************************************************************
 # Set compiler specific macros
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread -std=gnu99")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 
 
 #***************************************************************************************
@@ -103,9 +108,8 @@ set(PROG_SRCS
 #***************************************************************************************
 # Targets
 #****************************************************************************************
-# Set main target. Use "make microtbx_demo" to individually build the program.
-add_executable(
-  microtbx_demo
+# Set main target.
+add_executable(${PROJECT_NAME}
   ${PROG_SRCS}
 )
 
