@@ -88,7 +88,7 @@ void DemoMain(void)
 
   /* Fill the compile-time allocated buffer with random data, 32 bits at a time. */
   dataPtr = (uint32_t *)compileTimeBuffer;
-  for (idx = 0; idx < DEMO_BUFFER_SIZE/sizeof(uint32_t); idx++)
+  for (idx = 0; idx < (DEMO_BUFFER_SIZE/sizeof(uint32_t)); idx++)
   {
     dataPtr[idx] = TbxRandomNumberGet();
   }
@@ -106,19 +106,15 @@ void DemoMain(void)
    * TBX_CONF_HEAP_SIZE in "tbx_conf.h".
    */
   TBX_ASSERT(runTimeBuffer != NULL);
-  /* Only continue if memory allocation was successful. */
-  if (runTimeBuffer != NULL)
+  /* Fill the run-time allocated buffer with random data, 32 bits at a time. */
+  dataPtr = (uint32_t *)runTimeBuffer;
+  for (idx = 0; idx < (DEMO_BUFFER_SIZE/sizeof(uint32_t)); idx++)
   {
-    /* Fill the run-time allocated buffer with random data, 32 bits at a time. */
-    dataPtr = (uint32_t *)runTimeBuffer;
-    for (idx = 0; idx < DEMO_BUFFER_SIZE/sizeof(uint32_t); idx++)
-    {
-      dataPtr[idx] = TbxRandomNumberGet();
-    }
-    /* Display the generated data on the standard output. */
-    printf("\nRandom data stored in the run-time allocated buffer:\n");
-    DemoDisplayData(runTimeBuffer, DEMO_BUFFER_SIZE, 16U);
+    dataPtr[idx] = TbxRandomNumberGet();
   }
+  /* Display the generated data on the standard output. */
+  printf("\nRandom data stored in the run-time allocated buffer:\n");
+  DemoDisplayData(runTimeBuffer, DEMO_BUFFER_SIZE, 16U);
 
   /* Enter infinite program loop. */
   while (1)
