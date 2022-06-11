@@ -5,7 +5,7 @@
 #|---------------------------------------------------------------------------------------
 #|                          C O P Y R I G H T
 #|---------------------------------------------------------------------------------------
-#|   Copyright (c) 2019 by Feaser     www.feaser.com     All rights reserved
+#|   Copyright (c) 2022 by Feaser     www.feaser.com     All rights reserved
 #|
 #|---------------------------------------------------------------------------------------
 #|                            L I C E N S E
@@ -40,37 +40,51 @@ PROJ_NAME=microtbx_demo
 #|--------------------------------------------------------------------------------------|
 #| Configure tool path                                                                  |
 #|--------------------------------------------------------------------------------------|
+# Configure the path to where the arm-none-eabi-gcc program is located. If the program
+# is available on the path, then the TOOL_PATH variable can be left empty.
+# Make sure to add a fordward slash at the end. 
+#
+# Note that on Windows it should be in the 8.3 short pathname format with forward
+# slashes. Example:
+#   TOOL_PATH=C:/PROGRA~2/GNUTOO~1/82018-~1/bin/
+# To obtain the pathname in the 8.3 format, open the directory in the Windows command 
+# prompt and run the following command: 
+#   cmd /c for %A in ("%cd%") do @echo %~sA 
+#
+# You can also override the value directly on the command-line when calling make. For
+# example to set it to empty, in case arm-none-eabi-gcc is available on the path:
+#   make TOOL_PATH= clean all
 TOOL_PATH=/opt/gcc-arm-none-eabi-8-2018-q4-major/bin/
 
 
 #|--------------------------------------------------------------------------------------|
 #| Collect project files                                                                |
 #|--------------------------------------------------------------------------------------|
-# Recursive wildcard function implementation. Example usages:
-#   $(call rwildcard, , *.c *.h)   
-#     --> Returns all *.c and *.h files in the current directory and below
-#   $(call rwildcard, /lib/, *.c)
-#     --> Returns all *.c files in the /lib directory and below
-rwildcard = $(strip $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d)))
-
-# Collect all application files in the current directory and its subdirectories
-PROJ_FILES  = $(call rwildcard, , *.c *.h *.s)
+# Collect demo application sources
+PROJ_FILES = ../../../randomdata.c
+# Collect board specific sources
+PROJ_FILES += $(wildcard ../../*.c)
+PROJ_FILES += $(wildcard ../../*.h)
+# Collect GCC specific sources
+PROJ_FILES += $(wildcard ../*.c)
+PROJ_FILES += $(wildcard ../*.h)
+PROJ_FILES += $(wildcard ../*.s)
 # Collect MicroTBX sources
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/*.c)
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/*.c)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/*.h)
 # Collect MicroTBX port and compiler specific sources
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/port/ARM_CORTEXM/*.c)
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/port/ARM_CORTEXM/*.h)
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.c)
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.h)
-PROJ_FILES += $(wildcard ../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.s)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/port/ARM_CORTEXM/*.c)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/port/ARM_CORTEXM/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.c)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/microtbx/source/port/ARM_CORTEXM/GCC/*.s)
 # Collect CMSIS sources
-PROJ_FILES += $(wildcard ../../../third_party/cmsis/core/CMSIS/Core/Include/*.h)
-PROJ_FILES += $(wildcard ../../../third_party/cmsis/device/st/f0/Include/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/cmsis/core/CMSIS/Core/Include/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/cmsis/device/st/f0/Include/*.h)
 # Collect HAL sources
-PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Inc/*.h)
-PROJ_FILES += $(wildcard ../../../third_party/hal/st/f0/Src/*.c)
-PROJ_FILES := $(filter-out $(wildcard ../../../third_party/hal/st/f0/Src/*_template*.c), $(PROJ_FILES))
+PROJ_FILES += $(wildcard ../../../../../third_party/hal/st/f0/Inc/*.h)
+PROJ_FILES += $(wildcard ../../../../../third_party/hal/st/f0/Src/*.c)
+PROJ_FILES := $(filter-out $(wildcard ../../../../../third_party/hal/st/f0/Src/*_template*.c), $(PROJ_FILES))
 
 
 #|--------------------------------------------------------------------------------------|
@@ -97,8 +111,8 @@ PROJ_CHDRS  = $(filter %.h,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 #| Set important path variables                                                         |
 #|--------------------------------------------------------------------------------------|
 VPATH     = $(foreach path,$(sort $(foreach file,$(PROJ_FILES),$(dir $(file)))) $(subst \,/,$(OBJ_PATH)),$(path) :)
-OBJ_PATH  = obj
-BIN_PATH  = bin
+OBJ_PATH  = build
+BIN_PATH  = build
 INC_PATH  = $(patsubst %/,%,$(patsubst %,-I%,$(sort $(foreach file,$(filter %.h,$(PROJ_FILES)),$(dir $(file))))))
 LIB_PATH  = 
 
@@ -114,7 +128,7 @@ CFLAGS   += -DSTM32F091xC -DUSE_HAL_DRIVER -DUSE_FULL_LL_DRIVER
 CFLAGS   += $(INC_PATH)
 AFLAGS    = $(CFLAGS)
 LFLAGS    = $(STDFLAGS) $(OPTFLAGS)
-LFLAGS   += -Wl,-script="STM32F091RC_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
+LFLAGS   += -Wl,-script="../STM32F091RC_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
 LFLAGS   += -specs=nano.specs -Wl,--gc-sections $(LIB_PATH)
 OFLAGS    = -O srec
 ODFLAGS   = -x

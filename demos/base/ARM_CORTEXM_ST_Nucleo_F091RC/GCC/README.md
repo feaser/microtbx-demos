@@ -1,5 +1,4 @@
-This demo program demonstrates how MicroTBX is integrated and used. It is targeted towards an
-ST [Nucleo-F091RC](https://www.st.com/en/evaluation-tools/nucleo-f091rc.html) board and is configured for building with the [GNU ARM Embedded](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm) toolchain.
+These demo programs are targeted towards an ST [Nucleo-F091RC](https://www.st.com/en/evaluation-tools/nucleo-f091rc.html) board and are configured for building with the [GNU ARM Embedded](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm) toolchain.
 
 # Prerequisites
 
@@ -11,7 +10,7 @@ sudo apt-get install build-essential
 
 # Configuration
 
-The demo program is configured for building with a `makefile`. Before attempting to perform a build, update the location of the toolchain binaries (i.e. `arm-none-eabi-gcc`) in the `makefile`. It is set in variable `TOOL_PATH`:
+The demo programs are configured for building with a `makefile`. Before attempting to perform a build, update the location of the toolchain binaries (e.g. `arm-none-eabi-gcc`) in the `makefile`. It is set in variable `TOOL_PATH`:
 
 ```makefile
 TOOL_PATH=/opt/gcc-arm-none-eabi-8-2018-q4-major/bin/
@@ -27,4 +26,4 @@ Using the terminal, set the working directory to the directory that has the `mak
 make clean all
 ```
 
-This creates the `microtbx_demo.elf` executable in the `./bin` directory. This file can be programmed onto the ST Nucleo-F091RC board, using the on-board ST-Link debugger interface and with the help of the [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) software program.
+This creates the `microtbx_demo.elf` executable in the `./build` directory. This file can be programmed onto the ST Nucleo-F091RC board, using the on-board ST-Link debugger interface and with the help of the [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) software program.

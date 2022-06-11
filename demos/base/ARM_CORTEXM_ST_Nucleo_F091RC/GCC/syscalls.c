@@ -37,7 +37,7 @@ SOFTWARE.
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
-#include "putchar.h"
+#include "bsp.h"
 
 
 /* Variables */
@@ -78,25 +78,26 @@ void _exit(int32_t status)
 
 int _write(int32_t file, uint8_t *ptr, int32_t len)
 {
-  static uint8_t initialized = 0;
   int result = len;
   int idx;
-
-  /* make sure the communication interface for transmitting characters is initialized. */
-  if (!initialized)
-  {
-    PutCharInit();
-    initialized = 1;
-  }
 
   /* transmit the characters one at a time. */
   for (idx = 0; idx < len; idx++)
   {
-    if (!PutCharTransmit(*ptr))
+    if (!BspPutChar(*ptr))
     {
       errno = EIO;
       break;
     }
+		/* automatically send carriage return with each newline. */
+		if (*ptr == '\n')
+		{
+		  if (!BspPutChar('\r'))
+		  {
+		    errno = EIO;
+		    break;
+		  }
+		}
     ptr++;
   }
 

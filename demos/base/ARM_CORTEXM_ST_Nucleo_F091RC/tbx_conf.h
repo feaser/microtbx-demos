@@ -1,11 +1,11 @@
 /************************************************************************************//**
-* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC_GCC/tbx_conf.h
+* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/tbx_conf.h
 * \brief        MicroTBX configuration header file.
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2019 by Feaser     www.feaser.com     All rights reserved
+*   Copyright (c) 2022 by Feaser     www.feaser.com     All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E

@@ -1,11 +1,11 @@
 /************************************************************************************//**
-* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC_GCC/analogfloat.h
-* \brief        Floating analog input driver header file.
+* \file         demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/bsp.h
+* \brief        Board support package header file.
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2019 by Feaser     www.feaser.com     All rights reserved
+*   Copyright (c) 2022 by Feaser     www.feaser.com     All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
@@ -30,14 +30,15 @@
 *
 * \endinternal
 ****************************************************************************************/
-#ifndef ANALOGFLOAT_H
-#define ANALOGFLOAT_H
+#ifndef BSP_H
+#define BSP_H
 
 /****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
-void     AnalogFloatInit(void);
-uint16_t AnalogFloatGet(void);
+void     BspInit(void);
+int      BspPutChar(int ch);
+uint32_t BspGetSeed(void);
 
-#endif /* ANALOGFLOAT_H */
-/*********************************** end of analogfloat.h ******************************/
+#endif /* BSP_H */
+/*********************************** end of bsp.h **************************************/

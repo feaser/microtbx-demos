@@ -26,7 +26,7 @@ git clone --recursive https://github.com/feaser/microtbx-demos.git ~/MicroTBXDem
 
 # Contact
 
-Development and maintenance of MicroTBX is sponsered by Feaser. Feaser also offers integration/customization services, and professional technical support on a commercial basis:
+Development and maintenance of MicroTBX is sponsored by Feaser. Feaser also offers integration/customization services, and professional technical support on a commercial basis:
 
 * [https://www.feaser.com](https://www.feaser.com)
 
