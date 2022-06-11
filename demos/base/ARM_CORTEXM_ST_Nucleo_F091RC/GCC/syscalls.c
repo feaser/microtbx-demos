@@ -61,8 +61,8 @@ int _getpid(void)
 
 int _gettimeofday(struct timeval  *ptimeval, void *ptimezone)
 {
-  errno = ENOSYS;
-  return -1;
+	errno = ENOSYS;
+	return -1;
 }
 
 int _kill(int32_t pid, int32_t sig)
@@ -78,28 +78,28 @@ void _exit(int32_t status)
 
 int _write(int32_t file, uint8_t *ptr, int32_t len)
 {
-  int result = len;
-  int idx;
+	int result = len;
+	int idx;
 
-  /* transmit the characters one at a time. */
-  for (idx = 0; idx < len; idx++)
-  {
-    if (!BspPutChar(*ptr))
-    {
-      errno = EIO;
-      break;
-    }
+	/* transmit the characters one at a time. */
+	for (idx = 0; idx < len; idx++)
+	{
+		if (!BspPutChar(*ptr))
+		{
+			errno = EIO;
+			break;
+		}
 		/* automatically send carriage return with each newline. */
 		if (*ptr == '\n')
 		{
-		  if (!BspPutChar('\r'))
-		  {
-		    errno = EIO;
-		    break;
-		  }
+			if (!BspPutChar('\r'))
+			{
+				errno = EIO;
+				break;
+			}
 		}
-    ptr++;
-  }
+		ptr++;
+	}
 
   /* give the result back to the caller. */
   return result;

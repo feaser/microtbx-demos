@@ -175,15 +175,15 @@ uint32_t BspGetSeed(void)
    */
   for (idx = 0; idx < sizeof(conversionResults)/sizeof(conversionResults[0]); idx++)
   {
-		if (HAL_ADC_Start(&adcHandle) == HAL_OK)
-		{
-		  /* Wait for the analog to digital conversion to complete. */
-		  if (HAL_ADC_PollForConversion(&adcHandle, 10) == HAL_OK)
-		  {
-		    /* Store the conversion results. */
-		    conversionResults[idx] = HAL_ADC_GetValue(&adcHandle);
-		  }
-		}
+    if (HAL_ADC_Start(&adcHandle) == HAL_OK)
+    {
+      /* Wait for the analog to digital conversion to complete. */
+      if (HAL_ADC_PollForConversion(&adcHandle, 10) == HAL_OK)
+      {
+        /* Store the conversion results. */
+        conversionResults[idx] = HAL_ADC_GetValue(&adcHandle);
+      }
+    }
   }
   /* Create a 32-bit seed value by combining two reads of the floating analog pin. */
   result =  (conversionResults[0] << 16u) | conversionResults[1];
