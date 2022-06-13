@@ -1,5 +1,5 @@
 #****************************************************************************************
-#|  Description: Makefile for building all demo application in one go
+#|  Description: Makefile for building all demo applications in one go
 #|    File Name: makefile
 #|
 #|---------------------------------------------------------------------------------------
