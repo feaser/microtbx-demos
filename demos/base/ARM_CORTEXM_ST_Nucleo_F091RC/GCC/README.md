@@ -20,10 +20,11 @@ If the toolchain binaries are available on the path, then the `TOOL_PATH` variab
 
 # Building
 
-Using the terminal, set the working directory to the directory that has the `makefile` in it. Next, type the following command to build the demo program:
+Using the terminal, set the working directory to the directory that has the `makefile` in it. Next, type the following commands to rebuild the demo program(s):
 
 ```sh
-make clean all
+make clean
+make all
 ```
 
 This creates the `microtbx_demo.elf` executable in the `./build` directory. This file can be programmed onto the ST Nucleo-F091RC board, using the on-board ST-Link debugger interface and with the help of the [STM32CubeProgrammer](https://www.st.com/en/development-tools/stm32cubeprog.html) software program.
