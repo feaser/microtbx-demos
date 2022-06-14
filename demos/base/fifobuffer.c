@@ -154,7 +154,7 @@ void DemoMain(void)
   DemoDisplayElement(&element3);
   printf("[OK]\n");
 
-  /* Add a fourth element, which should fail, because the max size if 3. */
+  /* Add a fourth element, which should fail, because the max size is 3. */
   printf("Add a 4th element, which should fail..");
   bufferRes = FifoBufferStore(bufferCtx, &element4);
   TBX_ASSERT(bufferRes == TBX_ERROR);
