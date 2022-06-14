@@ -42,7 +42,6 @@ SHELL = sh
 #| Collect
 #|--------------------------------------------------------------------------------------|
 # Each subdirectory contains the makefile of a demo application
-#DEMO_DIRS := ${sort ${dir ${wildcard ./*/}}}
 DEMO_DIRS := $(filter-out ./, ${sort ${dir ${wildcard ./*/}}})
 
 
@@ -65,9 +64,7 @@ clean: $(DEMO_DIRS)
 #|--------------------------------------------------------------------------------------|
 .PHONY: $(DEMO_DIRS)
 $(DEMO_DIRS):
-	@echo $(DEMO_DIRS)   
-	@echo $(MAKE) -C $@ $(MAKECMDGOALS)
-#	@$(MAKE) -C $@ $(MAKECMDGOALS)
+	@$(MAKE) -C $@ $(MAKECMDGOALS)
 
 
 
