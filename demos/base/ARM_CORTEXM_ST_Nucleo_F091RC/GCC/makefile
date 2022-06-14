@@ -42,7 +42,8 @@ SHELL = sh
 #| Collect
 #|--------------------------------------------------------------------------------------|
 # Each subdirectory contains the makefile of a demo application
-DEMO_DIRS := ${sort ${dir ${wildcard ./*/}}}
+#DEMO_DIRS := ${sort ${dir ${wildcard ./*/}}}
+DEMO_DIRS := $(filter-out ./, ${sort ${dir ${wildcard ./*/}}})
 
 
 #|--------------------------------------------------------------------------------------|
