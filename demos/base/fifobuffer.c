@@ -117,30 +117,10 @@ void DemoMain(void)
   uint8_t      bufferRes;
   size_t       freeHeap;
   tFifoElement element;
-  tFifoElement const element1 =
-  {
-      .id = 0x123,
-      .len = 8,
-      .data = { 0, 1, 2, 3, 4, 5, 6, 7 }
-  };
-  tFifoElement const element2 =
-  {
-      .id = 0x456,
-      .len = 4,
-      .data = { 0xFF, 0xEE, 0xDD, 0xCC }
-  };
-  tFifoElement const element3 =
-  {
-      .id = 0x789,
-      .len = 2,
-      .data = { 0xAA, 0x55 }
-  };
-  tFifoElement const element4 =
-  {
-      .id = 0xABC,
-      .len = 3,
-      .data = { 0x11, 0x22, 0x33 }
-  };
+  tFifoElement element1 = { .id = 0x123, .len = 8, .data = { 0, 1, 2, 3, 4, 5, 6, 7 } };
+  tFifoElement element2 = { .id = 0x456, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC } };
+  tFifoElement element3 = { .id = 0x789, .len = 2, .data = { 0xAA, 0x55 } };
+  tFifoElement element4 = { .id = 0xABC, .len = 3, .data = { 0x11, 0x22, 0x33 } };
 
   /* Initialize the FIFO buffer module. Only needs to be called once. */
   FifoBufferInit();
