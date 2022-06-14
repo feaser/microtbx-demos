@@ -29,7 +29,6 @@
 *               elements again, allowing you to verify that they are indeed in the
 *               correct first-in-first-out order. Once done, the FIFO buffer is deleted.
 *               Next, a same logic is repeated but then for a variable sized FIFO buffer.
-*
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T

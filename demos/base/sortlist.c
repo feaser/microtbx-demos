@@ -22,7 +22,6 @@
 *               identifiers. The resulting list contents is sent to the standard output
 *               for verification purposes. Next, the date is sorted by descending
 *               identifiers.
-*
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
