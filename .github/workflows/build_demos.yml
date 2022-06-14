@@ -22,4 +22,4 @@ jobs:
         run: make TOOL_PATH= clean
       - name: Build the demo applications
         working-directory: demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/GCC
-        run: make TOOL_PATH= all
+        run: make -j TOOL_PATH= all
