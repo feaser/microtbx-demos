@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gcc: ['8-2018-q4', 'latest']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -15,11 +18,10 @@ jobs:
           submodules: true
       - name: Install GNU Arm Embedded Toolchain
         uses: carlosperate/arm-none-eabi-gcc-action@v1
-        with:
-          release: '8-2018-q4'
+        id: arm-none-eabi-gcc-action
       - name: Clean the build environment
         working-directory: demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/GCC
-        run: make TOOL_PATH= clean
+        run: make TOOL_PATH=${{ steps.arm-none-eabi-gcc-action.outputs.path }} clean
       - name: Build the demo applications
         working-directory: demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/GCC
-        run: make -j TOOL_PATH= all
+        run: make -j TOOL_PATH=${{ steps.arm-none-eabi-gcc-action.outputs.path }} all
