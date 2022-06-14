@@ -64,7 +64,9 @@ clean: $(DEMO_DIRS)
 #|--------------------------------------------------------------------------------------|
 .PHONY: $(DEMO_DIRS)
 $(DEMO_DIRS):
-	@$(MAKE) -C $@ $(MAKECMDGOALS)
+	@echo $(DEMO_DIRS)   
+	@echo $(MAKE) -C $@ $(MAKECMDGOALS)
+#	@$(MAKE) -C $@ $(MAKECMDGOALS)
 
 
 

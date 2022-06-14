@@ -17,6 +17,9 @@ jobs:
         uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
           release: '8-2018-q4'
+      - name: Display current directory
+        working-directory: demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/GCC
+        run: pwd
       - name: Clean the build environment
         working-directory: demos/base/ARM_CORTEXM_ST_Nucleo_F091RC/GCC
         run: make TOOL_PATH= clean
