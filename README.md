@@ -1,5 +1,5 @@
 # MicroTBX Demos
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Build Demos](https://github.com/feaser/microtbx-demos/actions/workflows/build_demos.yml/badge.svg)](https://github.com/feaser/microtbx-demos/actions/workflows/build_demos.yml)
 
 An assortment of demo programs to help you get started with the [MicroTBX](https://github.com/feaser/microtbx) software components in your own embedded software applications. 
 
