@@ -16,7 +16,6 @@
 *
 *               It is structured such that you can easily reuse the FIFO buffer solution.
 *               You just need to copy the following functions into your own code:
-*                 - FifoBufferInit()
 *                 - FifoBufferCreate()
 *                 - FifoBufferDelete()
 *                 - FifoBufferStore()
@@ -90,6 +89,7 @@ typedef struct
 {
   tTbxList * listHandle;
   size_t     maxSize;
+  size_t     elementSize;
 } tFifoCtx;
 
 
@@ -97,11 +97,10 @@ typedef struct
 * Function prototypes
 ****************************************************************************************/
 void       DemoDisplayElement(tFifoElement const * element);
-void       FifoBufferInit(void);
-tFifoCtx * FifoBufferCreate(size_t maxSize);
+tFifoCtx * FifoBufferCreate(size_t maxSize, size_t elementSize);
 void       FifoBufferDelete(tFifoCtx * ctx);
-uint8_t    FifoBufferStore(tFifoCtx * ctx, tFifoElement const * element);
-uint8_t    FifoBufferRetrieve(tFifoCtx * ctx, tFifoElement * element);
+uint8_t    FifoBufferStore(tFifoCtx * ctx, void const * element);
+uint8_t    FifoBufferRetrieve(tFifoCtx * ctx, void * element);
 size_t     FifoBufferCount(tFifoCtx * ctx);
 void       FifoBufferFlush(tFifoCtx * ctx);
 
@@ -122,9 +121,6 @@ void DemoMain(void)
   tFifoElement element3 = { .id = 0x789, .len = 2, .data = { 0xAA, 0x55 } };
   tFifoElement element4 = { .id = 0xABC, .len = 3, .data = { 0x11, 0x22, 0x33 } };
 
-  /* Initialize the FIFO buffer module. Only needs to be called once. */
-  FifoBufferInit();
-
   /* ------------------ Fixed size FIFO buffer --------------------------------------- */
   /* Create a new FIFO buffer that can hold up to three elements. */
   printf("\n");
@@ -132,7 +128,7 @@ void DemoMain(void)
   printf("*       Fixed size FIFO buffer                  *\n");
   printf("-------------------------------------------------\n");
   printf("Creating a new FIFO buffer of 3 elements..");
-  bufferCtx = FifoBufferCreate(3U);
+  bufferCtx = FifoBufferCreate(3U, sizeof(tFifoElement));
   TBX_ASSERT(bufferCtx != NULL);
   printf("[OK]\n");
 
@@ -184,7 +180,7 @@ void DemoMain(void)
   printf("*       Variable size FIFO buffer               *\n");
   printf("-------------------------------------------------\n");
   printf("Creating a new FIFO buffer of variable size..");
-  bufferCtx = FifoBufferCreate(0U);
+  bufferCtx = FifoBufferCreate(0U, sizeof(tFifoElement));
   TBX_ASSERT(bufferCtx != NULL);
   printf("[OK]\n");
 
@@ -282,40 +278,16 @@ void DemoDisplayElement(tFifoElement const * element)
 
 
 /************************************************************************************//**
-** \brief     Initializes the FIFO buffer module. This function should only be called
-**            once during program initialization.
-**
-****************************************************************************************/
-void FifoBufferInit(void)
-{
-  uint8_t poolResult;
-
-  /* Create the memory pool for dynamically allocating a FIFO buffer context. Give it an
-   * initial size of just one. We'll automatically increase it, when more context are
-   * needed.
-   */
-  poolResult = TbxMemPoolCreate(1U, sizeof(tFifoCtx));
-  TBX_ASSERT(poolResult == TBX_OK);
-
-  /* Create the memory pool for dynamically allocating FIFO buffer elements. Give it an
-   * initial size of just one. We'll automatically increase it, when more elements are
-   * needed.
-   */
-  poolResult = TbxMemPoolCreate(1U, sizeof(tFifoElement));
-  TBX_ASSERT(poolResult == TBX_OK);
-} /*** end of FifoBufferInit ***/
-
-
-/************************************************************************************//**
 ** \brief     Create the FIFO buffer. All other FifoBufferXxx() functions need this
 **            context.
 ** \param     maxSize Maximum amount of elements that the FIFO buffer is allowed to
 **            store. Set it to zero to allow the FIFO buffer to automatically grow as
 **            needed.
+** \param     elementSize The size of one element.
 ** \return    Pointer to the newly created context if successful, NULL otherwise.
 **
 ****************************************************************************************/
-tFifoCtx * FifoBufferCreate(size_t maxSize)
+tFifoCtx * FifoBufferCreate(size_t maxSize, size_t elementSize)
 {
   tFifoCtx * result = NULL;
   tFifoCtx * newCtx;
@@ -330,8 +302,9 @@ tFifoCtx * FifoBufferCreate(size_t maxSize)
   }
   TBX_ASSERT(newCtx != NULL);
 
-  /* Initialize the context. Start by storing its maximum size. */
+  /* Initialize the context. Start by storing its maximum size and the element size. */
   newCtx->maxSize = maxSize;
+  newCtx->elementSize = elementSize;
   /* Ceate the linked list of the actual buffer elements. */
   newCtx->listHandle = TbxListCreate();
   TBX_ASSERT(newCtx->listHandle != NULL);
@@ -377,11 +350,14 @@ void FifoBufferDelete(tFifoCtx * ctx)
 ** \return    TBX_OK if the element could be stored. TBX_ERROR if the buffer is full.
 **
 ****************************************************************************************/
-uint8_t FifoBufferStore(tFifoCtx * ctx, tFifoElement const * element)
+uint8_t FifoBufferStore(tFifoCtx * ctx, void const * element)
 {
-  uint8_t        result = TBX_ERROR;
-  uint8_t        stillRoom = TBX_TRUE;
-  tFifoElement * newElement;
+  uint8_t result = TBX_ERROR;
+  uint8_t stillRoom = TBX_TRUE;
+  void * newElement;
+  uint8_t const * srcPtr;
+  uint8_t * destPtr;
+  size_t idx;
 
   /* Verify the parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));
@@ -395,16 +371,21 @@ uint8_t FifoBufferStore(tFifoCtx * ctx, tFifoElement const * element)
   if (stillRoom == TBX_TRUE)
   {
     /* Obtain memory to store the new element from the memory pool. */
-    newElement = TbxMemPoolAllocate(sizeof(tFifoElement));
+    newElement = TbxMemPoolAllocate(ctx->elementSize);
     /* Automatically increase the memory pool if it was too small. */
     if (newElement == NULL)
     {
-      TbxMemPoolCreate(1U, sizeof(tFifoElement));
-      newElement = TbxMemPoolAllocate(sizeof(tFifoElement));
+      TbxMemPoolCreate(1U, ctx->elementSize);
+      newElement = TbxMemPoolAllocate(ctx->elementSize);
     }
     TBX_ASSERT(newElement != NULL);
     /* Copy the element. */
-    *newElement = *element;
+    srcPtr = element;
+    destPtr = newElement;
+    for (idx = 0; idx < ctx->elementSize; idx++)
+    {
+      destPtr[idx] = srcPtr[idx];
+    }
     /* Insert the element at the end of the linked list. */
     result = TbxListInsertItemBack(ctx->listHandle, newElement);
   }
@@ -423,10 +404,13 @@ uint8_t FifoBufferStore(tFifoCtx * ctx, tFifoElement const * element)
 ** \return    TBX_OK if an element was retrieves. TBX_ERROR if the buffer was empty.
 **
 ****************************************************************************************/
-uint8_t FifoBufferRetrieve(tFifoCtx * ctx, tFifoElement * element)
+uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
 {
   uint8_t result = TBX_ERROR;
-  tFifoElement * currentElement;
+  void * currentElement;
+  uint8_t const * srcPtr;
+  uint8_t * destPtr;
+  size_t idx;
 
   /* Verify the parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));
@@ -438,7 +422,12 @@ uint8_t FifoBufferRetrieve(tFifoCtx * ctx, tFifoElement * element)
     /* Delete if from the linked list, now that we read it. */
     TbxListRemoveItem(ctx->listHandle, currentElement);
     /* Copy the element to the caller's provided storage. */
-    *element = *currentElement;
+    srcPtr = currentElement;
+    destPtr = element;
+    for (idx = 0; idx < ctx->elementSize; idx++)
+    {
+      destPtr[idx] = srcPtr[idx];
+    }
     /* Give the allocate memory back to the pool. */
     TbxMemPoolRelease(currentElement);
     /* Update the results. */
@@ -476,7 +465,7 @@ size_t FifoBufferCount(tFifoCtx * ctx)
 ****************************************************************************************/
 void FifoBufferFlush(tFifoCtx * ctx)
 {
-  tFifoElement * currentElement;
+  void * currentElement;
 
   /* Verify the parameter. */
   TBX_ASSERT(ctx != NULL);
