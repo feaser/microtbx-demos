@@ -320,8 +320,8 @@ tFifoCtx * FifoBufferCreate(size_t maxSize, size_t elementSize)
 
 
 /************************************************************************************//**
-** \brief     Delete the FIFO buffer. Call this function when the FIFO buffer is not
-**            longer needs. It releases the allocated memory back to the memory pools.
+** \brief     Delete the FIFO buffer. Call this function when the FIFO buffer is no
+**            longer needed. It releases the allocated memory back to the memory pools.
 ** \param     ctx Pointer to the FIFO buffer context.
 **
 ****************************************************************************************/
@@ -401,7 +401,7 @@ uint8_t FifoBufferStore(tFifoCtx * ctx, void const * element)
 **            future reuse.
 ** \param     ctx Pointer to the FIFO buffer context.
 ** \param     element Pointer to where the data of the retrieved element is written to.
-** \return    TBX_OK if an element was retrieves. TBX_ERROR if the buffer was empty.
+** \return    TBX_OK if an element was retrieved. TBX_ERROR if the buffer was empty.
 **
 ****************************************************************************************/
 uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
@@ -419,7 +419,7 @@ uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
   currentElement = TbxListGetFirstItem(ctx->listHandle);
   if (currentElement != NULL)
   {
-    /* Delete if from the linked list, now that we read it. */
+    /* Delete it from the linked list, now that we read it. */
     TbxListRemoveItem(ctx->listHandle, currentElement);
     /* Copy the element to the caller's provided storage. */
     srcPtr = currentElement;
@@ -430,7 +430,7 @@ uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
     }
     /* Give the allocate memory back to the pool. */
     TbxMemPoolRelease(currentElement);
-    /* Update the results. */
+    /* Update the result. */
     result = TBX_OK;
   }
   /* Give the result back to the caller. */
@@ -439,7 +439,7 @@ uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
 
 
 /************************************************************************************//**
-** \brief     Obtains the count of elements currently store in the FIFO buffer.
+** \brief     Obtains the count of elements currently stored in the FIFO buffer.
 ** \param     ctx Pointer to the FIFO buffer context.
 ** \return    Element count.
 **
@@ -459,7 +459,7 @@ size_t FifoBufferCount(tFifoCtx * ctx)
 
 
 /************************************************************************************//**
-** \brief     Flushed the FIFO buffer by clearing all its elements.
+** \brief     Flushes the FIFO buffer by clearing all its elements.
 ** \param     ctx Pointer to the FIFO buffer context.
 **
 ****************************************************************************************/
@@ -476,7 +476,7 @@ void FifoBufferFlush(tFifoCtx * ctx)
   {
     /* Delete it from the linked list. */
     TbxListRemoveItem(ctx->listHandle, currentElement);
-    /* Give the allocate memory back to the pool. */
+    /* Give the allocated memory back to the pool. */
     TbxMemPoolRelease(currentElement);
     /* Continue with the next item in the list, if any. */
     currentElement = TbxListGetFirstItem(ctx->listHandle);
