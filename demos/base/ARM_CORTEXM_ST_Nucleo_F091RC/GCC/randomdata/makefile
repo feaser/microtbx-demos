@@ -100,11 +100,10 @@ SZ = $(TOOL_PATH)arm-none-eabi-size
 
 
 #|--------------------------------------------------------------------------------------|
-#| Filter project files
+#| Filter project files                                                                 |
 #|--------------------------------------------------------------------------------------|
 PROJ_ASRCS  = $(filter %.s,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 PROJ_CSRCS  = $(filter %.c,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
-PROJ_CHDRS  = $(filter %.h,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 
 
 #|--------------------------------------------------------------------------------------|
@@ -123,6 +122,7 @@ LIB_PATH  =
 STDFLAGS  = -mcpu=cortex-m0 -mthumb -mfloat-abi=soft
 STDFLAGS += -fdata-sections -ffunction-sections -Wall -g3
 OPTFLAGS  = -O0
+DEPFLAGS  = -MT $@ -MMD -MP -MF $(OBJ_PATH)/$*.d
 CFLAGS    = $(STDFLAGS) $(OPTFLAGS)
 CFLAGS   += -DSTM32F091xC -DUSE_HAL_DRIVER -DUSE_FULL_LL_DRIVER
 CFLAGS   += $(INC_PATH)
@@ -170,13 +170,13 @@ $(BIN_PATH)/$(PROJ_NAME).elf : $(AOBJS) $(COBJS)
 #|--------------------------------------------------------------------------------------|
 #| Compile and assemble                                                                 |
 #|--------------------------------------------------------------------------------------|
-$(AOBJS): %.o: %.s $(PROJ_CHDRS)
+$(AOBJS): %.o: %.s
 	@echo +++ Assembling [$(notdir $<)]
 	@$(AS) $(AFLAGS) -c $< -o $(OBJ_PATH)/$(@F)
 
-$(COBJS): %.o: %.c $(PROJ_CHDRS)
+$(COBJS): %.o: %.c $(OBJ_PATH)/%.d
 	@echo +++ Compiling [$(notdir $<)]
-	@$(CC) $(CFLAGS) -c $< -o $(OBJ_PATH)/$(@F)
+	@$(CC) $(DEPFLAGS) $(CFLAGS) -c $< -o $(OBJ_PATH)/$(@F)
 
 
 #|--------------------------------------------------------------------------------------|
@@ -189,7 +189,15 @@ clean:
 	@$(RM) $(RMFLAGS) $(foreach file,$(COBJS),$(OBJ_PATH)/$(file))
 	@$(RM) $(RMFLAGS) $(patsubst %.o,%.lst,$(foreach file,$(AOBJS),$(OBJ_PATH)/$(file)))
 	@$(RM) $(RMFLAGS) $(patsubst %.o,%.lst,$(foreach file,$(COBJS),$(OBJ_PATH)/$(file)))
+	@$(RM) $(RMFLAGS) $(patsubst %.o,%.d,$(foreach file,$(COBJS),$(OBJ_PATH)/$(file)))
 	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).elf $(BIN_PATH)/$(PROJ_NAME).map
 	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).srec
 	@echo +++ Clean complete
-                                                                                                                                                                                                                                                                
+	
+#|--------------------------------------------------------------------------------------|
+#| Dependency generation                                                                |
+#|--------------------------------------------------------------------------------------|
+DEPFILES := $(PROJ_CSRCS:%.c=$(OBJ_PATH)/%.d)
+$(DEPFILES):
+include $(wildcard $(DEPFILES))	
+
