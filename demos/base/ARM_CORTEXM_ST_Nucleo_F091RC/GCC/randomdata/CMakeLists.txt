@@ -12,10 +12,8 @@ set(PROJECT_CPU_FLAGS -mcpu=cortex-m0 -mthumb -mfloat-abi=soft)
 set(PROJECT_COMPILER_FLAGS -Wall -Wextra -Wno-unused-parameter)
 set(PROJECT_LINKER_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/../STM32F091RC_FLASH.ld")
 
-# Set target executabe.
-add_executable(${PROJECT_NAME}
-    ${PROJECT_SOURCES}
-)
+# Set target executable.
+add_executable(${PROJECT_NAME})
 
 # Add additional compiler options.
 target_compile_options(${PROJECT_NAME} PRIVATE
