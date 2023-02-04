@@ -15,7 +15,6 @@ sudo apt-get install build-essential
 Using the terminal, set the working directory to where you clone the demo repository (e.g. `~/MicroTBXDemos`). Next type the following commands to automatically generate the build environment with CMake for all included demo programs:
 
 ```bash
-mkdir build
 cd build
 cmake ..
 ```
