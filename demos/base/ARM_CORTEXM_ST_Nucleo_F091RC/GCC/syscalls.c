@@ -65,18 +65,18 @@ int _gettimeofday(struct timeval  *ptimeval, void *ptimezone)
 	return -1;
 }
 
-int _kill(int32_t pid, int32_t sig)
+int _kill(int pid, int sig)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
-void _exit(int32_t status)
+void _exit(int status)
 {
 	while (1) {}		/* Make sure we hang here */
 }
 
-int _write(int32_t file, uint8_t *ptr, int32_t len)
+int _write(int file, char *ptr, int len)
 {
 	int result = len;
 	int idx;
@@ -105,7 +105,7 @@ int _write(int32_t file, uint8_t *ptr, int32_t len)
   return result;
 }
 
-void * _sbrk(int32_t incr)
+void * _sbrk(int incr)
 {
 	extern char   end; /* Set by linker.  */
 	static char * heap_end;
@@ -121,32 +121,32 @@ void * _sbrk(int32_t incr)
 	return (void *) prev_heap_end;
 }
 
-int _close(int32_t file)
+int _close(int file)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
 
-int _fstat(int32_t file, struct stat *st)
+int _fstat(int file, struct stat *st)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
-int _isatty(int32_t file)
+int _isatty(int file)
 {
 	errno = ENOSYS;
 	return 0;
 }
 
-int _lseek(int32_t file, int32_t ptr, int32_t dir)
+int _lseek(int file, int ptr, int dir)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
-int _read(int32_t file, uint8_t *ptr, int32_t len)
+int _read(int file, char *ptr, int len)
 {
 	errno = ENOSYS;
 	return -1;
@@ -158,19 +158,19 @@ int _readlink(const char *path, char *buf, size_t bufsize)
   return -1;
 }
 
-int _open(const uint8_t *path, int32_t flags, int32_t mode)
+int _open(char *path, int flags, int mode)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
-int _wait(int32_t *status)
+int _wait(int *status)
 {
 	errno = ENOSYS;
 	return -1;
 }
 
-int _unlink(const uint8_t *name)
+int _unlink(char *name)
 {
 	errno = ENOSYS;
 	return -1;
@@ -182,7 +182,7 @@ int _times(struct tms *buf)
 	return -1;
 }
 
-int _stat(const uint8_t *file, struct stat *st)
+int _stat(char *file, struct stat *st)
 {
 	errno = ENOSYS;
 	return -1;
@@ -194,7 +194,7 @@ int _symlink(const char *path1, const char *path2)
   return -1;
 }
 
-int _link(const uint8_t *old, const uint8_t *new)
+int _link(char *old, char *new)
 {
 	errno = ENOSYS;
 	return -1;
@@ -206,7 +206,7 @@ int _fork(void)
 	return -1;
 }
 
-int _execve(const uint8_t *name, uint8_t * const *argv, uint8_t * const *env)
+int _execve(char *name, char **argv, char **env)
 {
 	errno = ENOSYS;
 	return -1;

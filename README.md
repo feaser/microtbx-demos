@@ -7,24 +7,15 @@ MicroTBX is an open source Microcontroller ToolBoX consisting of software compon
 
 ## Getting the code
 
-To get the code, clone the Git repository to a subdirectory, for example inside your own home directory:
+To get the code, clone the Git repository to a subdirectory, for example inside your own home directory. Make sure to add the `--recursive` flag to also clone the submodules:
 
-    git clone https://github.com/feaser/microtbx-demos.git ~/MicroTBXDemos
+    git clone --recursive https://github.com/feaser/microtbx-demos.git ~/MicroTBXDemos
 
-This Git repository makes use of submodules. This means that one more step is needed to also get the code of the submodules: `git submodule update --init`. For example:
+## Building and running the demo programs
 
-```
-cd ~/MicroTBXDemos
-git submodule update --init
-```
+The `demos` subdirectory contains the programs for different MicroTBX features. Refer to the included `README.md` in the subdirectories for details and building and running the demo programs.
 
-Alternatively, you can clone and obtain the submodules in one go by using the `--recursive` argument. Example:
-
-```
-git clone --recursive https://github.com/feaser/microtbx-demos.git ~/MicroTBXDemos
-```
-
-# Contact
+## Contact
 
 Development and maintenance of MicroTBX is sponsored by Feaser. Feaser also offers integration/customization services, and professional technical support on a commercial basis:
 
