@@ -10,6 +10,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -51,9 +54,9 @@ static ADC_HandleTypeDef adcHandle;
 ****************************************************************************************/
 void BspInit(void)
 {
-  GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+  GPIO_InitTypeDef       GPIO_InitStruct       = { 0 };
   ADC_ChannelConfTypeDef ADC_ChannelConfStruct = { 0 };
-  LL_USART_InitTypeDef USART_InitStruct = { 0 };
+  LL_USART_InitTypeDef   USART_InitStruct      = { 0 };
 
   /* GPIO port, ADC and UART peripheral clock enable. */
   __HAL_RCC_GPIOA_CLK_ENABLE();

@@ -31,6 +31,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -82,9 +85,13 @@ typedef struct
 /****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
-uint8_t DemoCompareElementByAscId(void const * item1, void const * item2);
-uint8_t DemoCompareElementByDescId(void const * item1, void const * item2);
-void    DemoDisplayElement(tListElement const * element);
+uint8_t DemoCompareElementByAscId (void         const * item1, 
+                                   void         const * item2);
+
+uint8_t DemoCompareElementByDescId(void         const * item1, 
+                                   void         const * item2);
+
+void    DemoDisplayElement        (tListElement const * element);
 
 
 /************************************************************************************//**
@@ -94,16 +101,16 @@ void    DemoDisplayElement(tListElement const * element);
 ****************************************************************************************/
 void DemoMain(void)
 {
-  tTbxList * dataList;
+  tTbxList     * dataList;
   tListElement * dataElement;
-  tListElement dataEntries[] =
+  tListElement   dataEntries[] =
   {
     { .id = 0x200, .len = 8, .data = { 1, 2, 3, 4, 5, 6, 7, 8 }  },
     { .id = 0x300, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC }  },
     { .id = 0x100, .len = 6, .data = { 0xAA, 0x55, 0x11, 0x22, 0x33, 0x44 }  },
   };
-  size_t idx = 0U;
-  uint8_t listRes;
+  size_t         idx = 0U;
+  uint8_t        listRes;
 
   /* Create a new linked list. */
   printf("Creating a new linked list..");
@@ -167,9 +174,10 @@ void DemoMain(void)
 **            TBX_FALSE otherwise.
 **
 ****************************************************************************************/
-uint8_t DemoCompareElementByAscId(void const * item1, void const * item2)
+uint8_t DemoCompareElementByAscId(void const * item1, 
+                                  void const * item2)
 {
-  uint8_t result = TBX_FALSE;
+  uint8_t              result   = TBX_FALSE;
   tListElement const * element1 = item1;
   tListElement const * element2 = item2;
 
@@ -196,9 +204,10 @@ uint8_t DemoCompareElementByAscId(void const * item1, void const * item2)
 **            TBX_FALSE otherwise.
 **
 ****************************************************************************************/
-uint8_t DemoCompareElementByDescId(void const * item1, void const * item2)
+uint8_t DemoCompareElementByDescId(void const * item1, 
+                                   void const * item2)
 {
-  uint8_t result = TBX_FALSE;
+  uint8_t              result   = TBX_FALSE;
   tListElement const * element1 = item1;
   tListElement const * element2 = item2;
 

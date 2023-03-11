@@ -10,6 +10,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -33,12 +36,23 @@
 #ifndef BSP_H
 #define BSP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
-void     BspInit(void);
+void     BspInit   (void);
+
 int      BspPutChar(int ch);
+
 uint32_t BspGetSeed(void);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BSP_H */
 /*********************************** end of bsp.h **************************************/

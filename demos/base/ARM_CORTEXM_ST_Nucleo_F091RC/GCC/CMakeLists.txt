@@ -1,17 +1,17 @@
 # Create interface library for the Nucleo-F091RC GCC compiler specific sources.
-add_library(nucleo_f091rc_gcc INTERFACE)
+add_library(nucleo_f091rc_gcc_base INTERFACE)
 
-target_sources(nucleo_f091rc_gcc INTERFACE
+target_sources(nucleo_f091rc_gcc_base INTERFACE
     "${CMAKE_CURRENT_LIST_DIR}/startup_stm32f091xc.s"
     "${CMAKE_CURRENT_LIST_DIR}/syscalls.c"
 )
 
-target_include_directories(nucleo_f091rc_gcc INTERFACE
+target_include_directories(nucleo_f091rc_gcc_base INTERFACE
   "${CMAKE_CURRENT_LIST_DIR}"
 )
 
-target_link_libraries(nucleo_f091rc_gcc INTERFACE
-  nucleo_f091rc
+target_link_libraries(nucleo_f091rc_gcc_base INTERFACE
+  nucleo_f091rc_base
 )
 
 # Include the actual demo projects.

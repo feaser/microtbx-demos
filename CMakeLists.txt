@@ -10,10 +10,13 @@ set(CMAKE_CXX_STANDARD 17)
 # Specify overall project name.
 project(apps LANGUAGES C CXX ASM)
 
-# Include the MicroTBX sources
+# Include the MicroTBX sources.
 add_subdirectory(third_party/microtbx)
 
-# Include the demos sources
+# Include other third party components.
+include("${CMAKE_SOURCE_DIR}/.cmake/CubeF0.cmake")
+
+# Include the demos sources.
 add_subdirectory(demos)
 
 

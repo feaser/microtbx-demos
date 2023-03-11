@@ -1,10 +1,10 @@
 # Configure the project name.
-project(NucleoF091RC_FifoBuffer)
+project(NucleoF091RC_Base_FifoBuffer)
 
 # Configure project libraries.
 set(PROJECT_LIBRARIES
     fifo_buffer_demo
-    nucleo_f091rc_gcc
+    nucleo_f091rc_gcc_base
 )
 
 # Configure project specific CPU/compiler flags and linker script.

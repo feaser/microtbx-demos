@@ -1,10 +1,10 @@
 # Configure the project name.
-project(NucleoF091RC_SecureData)
+project(NucleoF091RC_Base_SecureData)
 
 # Configure project libraries.
 set(PROJECT_LIBRARIES
     secure_data_demo
-    nucleo_f091rc_gcc
+    nucleo_f091rc_gcc_base
 )
 
 # Configure project specific CPU/compiler flags and linker script.

@@ -1,10 +1,10 @@
 # Configure the project name.
-project(NucleoF091RC_RandomData)
+project(NucleoF091RC_Base_RandomData)
 
 # Configure project libraries.
 set(PROJECT_LIBRARIES
     random_data_demo
-    nucleo_f091rc_gcc
+    nucleo_f091rc_gcc_base
 )
 
 # Configure project specific CPU/compiler flags and linker script.

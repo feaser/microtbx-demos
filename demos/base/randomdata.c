@@ -16,6 +16,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -56,7 +59,10 @@
 * Function prototypes
 ****************************************************************************************/
 static uint32_t DemoSeedInitHandler(void);
-static void     DemoDisplayData(uint8_t const * data, size_t len, size_t bytesPerLine);
+
+static void     DemoDisplayData    (uint8_t const * data, 
+                                    size_t          len,
+                                    size_t          bytesPerLine);
 
 
 /****************************************************************************************
@@ -65,7 +71,7 @@ static void     DemoDisplayData(uint8_t const * data, size_t len, size_t bytesPe
 /** \brief Buffer for storing randomly generated data. Its size is fixed at compile
  *         time.
  */
-static uint8_t compileTimeBuffer[DEMO_BUFFER_SIZE];
+static uint8_t   compileTimeBuffer[DEMO_BUFFER_SIZE];
 
 /** \brief Buffer for storing randomly generated data. Memory for the buffer is
  *         dynamically allocated from the heap at run-time.
@@ -148,7 +154,9 @@ static uint32_t DemoSeedInitHandler(void)
 ** \param     bytesPerLine Number of bytes to display on one line.
 **
 ****************************************************************************************/
-static void DemoDisplayData(uint8_t const * data, size_t len, size_t bytesPerLine)
+static void DemoDisplayData(uint8_t const * data, 
+                            size_t          len, 
+                            size_t          bytesPerLine)
 {
   size_t idx;
 

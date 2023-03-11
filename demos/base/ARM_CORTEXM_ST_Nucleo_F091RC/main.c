@@ -10,6 +10,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -43,9 +46,12 @@
 /****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
-static void SystemClock_Config(void);
-static void AppAssertionHandler(const char * const file, uint32_t line);
-extern void DemoMain(void);
+static void SystemClock_Config (void);
+
+static void AppAssertionHandler(char     const * const file, 
+                                uint32_t               line);
+
+extern void DemoMain           (void);
 
 
 /************************************************************************************//**
@@ -142,7 +148,8 @@ void HAL_MspInit(void)
 ** \param     line The line number inside the file where the assertion occurred.
 **
 ****************************************************************************************/
-static void AppAssertionHandler(const char * const file, uint32_t line)
+static void AppAssertionHandler(char     const * const file, 
+                                uint32_t               line)
 {
   TBX_UNUSED_ARG(file);
   TBX_UNUSED_ARG(line);

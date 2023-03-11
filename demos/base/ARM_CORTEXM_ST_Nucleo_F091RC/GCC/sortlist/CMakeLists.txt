@@ -1,10 +1,10 @@
 # Configure the project name.
-project(NucleoF091RC_SortList)
+project(NucleoF091RC_Base_SortList)
 
 # Configure project libraries.
 set(PROJECT_LIBRARIES
     sort_list_demo
-    nucleo_f091rc_gcc
+    nucleo_f091rc_gcc_base
 )
 
 # Configure project specific CPU/compiler flags and linker script.

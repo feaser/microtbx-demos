@@ -41,6 +41,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -100,14 +103,28 @@ typedef struct
 * Function prototypes
 ****************************************************************************************/
 void        DemoDisplayElement(tArrayElement const * element);
-tArrayCtx * ArrayCreate(size_t elementSize);
-void        ArrayDelete(tArrayCtx * ctx);
-uint8_t     ArrayAdd(tArrayCtx * ctx, void const * element);
-uint8_t     ArrayRemove(tArrayCtx * ctx, size_t idx);
-uint8_t     ArrayGet(tArrayCtx * ctx, size_t idx, void * element);
-uint8_t     ArraySet(tArrayCtx * ctx, size_t idx, void const * element);
-size_t      ArrayCount(tArrayCtx * ctx);
-void        ArrayFlush(tArrayCtx * ctx);
+
+tArrayCtx * ArrayCreate       (size_t                elementSize);
+
+void        ArrayDelete       (tArrayCtx           * ctx);
+
+uint8_t     ArrayAdd          (tArrayCtx           * ctx,
+                               void          const * element);
+
+uint8_t     ArrayRemove       (tArrayCtx           * ctx, 
+                               size_t                idx);
+
+uint8_t     ArrayGet          (tArrayCtx           * ctx, 
+                               size_t                idx,
+                               void                * element);
+
+uint8_t     ArraySet          (tArrayCtx           * ctx,
+                               size_t                idx,
+                               void          const * element);
+
+size_t      ArrayCount        (tArrayCtx           * ctx);
+
+void        ArrayFlush        (tArrayCtx           * ctx);
 
 
 /************************************************************************************//**
@@ -117,14 +134,14 @@ void        ArrayFlush(tArrayCtx * ctx);
 ****************************************************************************************/
 void DemoMain(void)
 {
-  tArrayCtx *   arrayCtx;
-  uint8_t       arrayRes;
-  size_t        idx;
-  tArrayElement element;
-  tArrayElement elementBackup;
-  tArrayElement elementA = { .id = 0x123, .len = 8, .data = { 0, 1, 2, 3, 4, 5, 6, 7 } };
-  tArrayElement elementB = { .id = 0x456, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC } };
-  tArrayElement elementC = { .id = 0x789, .len = 2, .data = { 0xAA, 0x55 } };
+  tArrayCtx     * arrayCtx;
+  uint8_t         arrayRes;
+  size_t          idx;
+  tArrayElement   element;
+  tArrayElement   elementBackup;
+  tArrayElement   elementA = {.id = 0x123, .len = 8, .data = { 0, 1, 2, 3, 4, 5, 6, 7 }};
+  tArrayElement   elementB = {.id = 0x456, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC }};
+  tArrayElement   elementC = {.id = 0x789, .len = 2, .data = { 0xAA, 0x55 }};
 
   /* Create a new dynamic array. */
   printf("Creating a new dynamic array..");
@@ -341,13 +358,14 @@ void ArrayDelete(tArrayCtx * ctx)
 ** \param     element Pointer to the element to add to the array.
 **
 ****************************************************************************************/
-uint8_t ArrayAdd(tArrayCtx * ctx, void const * element)
+uint8_t ArrayAdd(tArrayCtx       * ctx, 
+                 void      const * element)
 {
-  uint8_t result = TBX_ERROR;
-  void * newElement;
+  uint8_t         result = TBX_ERROR;
+  void          * newElement;
   uint8_t const * srcPtr;
-  uint8_t * destPtr;
-  size_t dataIdx;
+  uint8_t       * destPtr;
+  size_t          dataIdx;
 
   /* Verify parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));
@@ -383,12 +401,13 @@ uint8_t ArrayAdd(tArrayCtx * ctx, void const * element)
 **            specified index.
 **
 ****************************************************************************************/
-uint8_t ArrayRemove(tArrayCtx * ctx, size_t idx)
+uint8_t ArrayRemove(tArrayCtx * ctx, 
+                    size_t      idx)
 {
-  uint8_t result = TBX_ERROR;
-  void * currentElement;
-  size_t currentIdx = 0U;
-  uint8_t foundElement = TBX_FALSE;
+  uint8_t   result = TBX_ERROR;
+  void    * currentElement;
+  size_t    currentIdx = 0U;
+  uint8_t   foundElement = TBX_FALSE;
 
   /* Verify parameter. */
   TBX_ASSERT(ctx != NULL);
@@ -431,15 +450,17 @@ uint8_t ArrayRemove(tArrayCtx * ctx, size_t idx)
 **            specified index.
 **
 ****************************************************************************************/
-uint8_t ArrayGet(tArrayCtx * ctx, size_t idx, void * element)
+uint8_t ArrayGet(tArrayCtx * ctx, 
+                 size_t      idx,
+                 void      * element)
 {
-  uint8_t result = TBX_ERROR;
-  void * currentElement;
-  size_t currentIdx = 0U;
-  uint8_t foundElement = TBX_FALSE;
+  uint8_t         result = TBX_ERROR;
+  void          * currentElement;
+  size_t          currentIdx = 0U;
+  uint8_t         foundElement = TBX_FALSE;
   uint8_t const * srcPtr;
-  uint8_t * destPtr;
-  size_t dataIdx;
+  uint8_t       * destPtr;
+  size_t          dataIdx;
 
   /* Verify parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));
@@ -485,15 +506,17 @@ uint8_t ArrayGet(tArrayCtx * ctx, size_t idx, void * element)
 **            specified index.
 **
 ****************************************************************************************/
-uint8_t ArraySet(tArrayCtx * ctx, size_t idx, void const * element)
+uint8_t ArraySet(tArrayCtx       * ctx, 
+                size_t             idx, 
+                void       const * element)
 {
-  uint8_t result = TBX_ERROR;
-  void * currentElement;
-  size_t currentIdx = 0U;
-  uint8_t foundElement = TBX_FALSE;
+  uint8_t         result = TBX_ERROR;
+  void          * currentElement;
+  size_t          currentIdx = 0U;
+  uint8_t         foundElement = TBX_FALSE;
   uint8_t const * srcPtr;
-  uint8_t * destPtr;
-  size_t dataIdx;
+  uint8_t       * destPtr;
+  size_t          dataIdx;
 
   /* Verify parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));

@@ -25,6 +25,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -95,9 +98,13 @@ static tSecureDataBlock secureDataBlock;
 /****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
-static void    DemoStoreData(uint8_t const * data);
-static uint8_t DemoRetrieveData(uint8_t * data);
-static void    DemoDisplayData(uint8_t const * data, size_t len, size_t bytesPerLine);
+static void    DemoStoreData   (uint8_t const * data);
+
+static uint8_t DemoRetrieveData(uint8_t       * data);
+
+static void    DemoDisplayData (uint8_t const * data, 
+                                size_t          len, 
+                                size_t          bytesPerLine);
 
 
 /************************************************************************************//**
@@ -252,7 +259,9 @@ static uint8_t DemoRetrieveData(uint8_t * data)
 ** \param     bytesPerLine Number of bytes to display on one line.
 **
 ****************************************************************************************/
-static void DemoDisplayData(uint8_t const * data, size_t len, size_t bytesPerLine)
+static void DemoDisplayData(uint8_t const * data, 
+                            size_t          len, 
+                            size_t          bytesPerLine)
 {
   size_t idx;
 

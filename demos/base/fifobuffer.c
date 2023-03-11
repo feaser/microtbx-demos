@@ -37,6 +37,9 @@
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
 *----------------------------------------------------------------------------------------
+*
+* SPDX-License-Identifier: MIT
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
@@ -97,12 +100,21 @@ typedef struct
 * Function prototypes
 ****************************************************************************************/
 void       DemoDisplayElement(tFifoElement const * element);
-tFifoCtx * FifoBufferCreate(size_t maxSize, size_t elementSize);
-void       FifoBufferDelete(tFifoCtx * ctx);
-uint8_t    FifoBufferStore(tFifoCtx * ctx, void const * element);
-uint8_t    FifoBufferRetrieve(tFifoCtx * ctx, void * element);
-size_t     FifoBufferCount(tFifoCtx * ctx);
-void       FifoBufferFlush(tFifoCtx * ctx);
+
+tFifoCtx * FifoBufferCreate  (size_t               maxSize, 
+                              size_t               elementSize);
+
+void       FifoBufferDelete  (tFifoCtx           * ctx);
+
+uint8_t    FifoBufferStore   (tFifoCtx           * ctx, 
+                              void         const * element);
+
+uint8_t    FifoBufferRetrieve(tFifoCtx           * ctx,
+                              void               * element);
+
+size_t     FifoBufferCount   (tFifoCtx           * ctx);
+
+void       FifoBufferFlush   (tFifoCtx           * ctx);
 
 
 /************************************************************************************//**
@@ -112,14 +124,14 @@ void       FifoBufferFlush(tFifoCtx * ctx);
 ****************************************************************************************/
 void DemoMain(void)
 {
-  tFifoCtx *   bufferCtx;
-  uint8_t      bufferRes;
-  size_t       freeHeap;
-  tFifoElement element;
-  tFifoElement element1 = { .id = 0x123, .len = 8, .data = { 0, 1, 2, 3, 4, 5, 6, 7 } };
-  tFifoElement element2 = { .id = 0x456, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC } };
-  tFifoElement element3 = { .id = 0x789, .len = 2, .data = { 0xAA, 0x55 } };
-  tFifoElement element4 = { .id = 0xABC, .len = 3, .data = { 0x11, 0x22, 0x33 } };
+  tFifoCtx     * bufferCtx;
+  uint8_t        bufferRes;
+  size_t         freeHeap;
+  tFifoElement   element;
+  tFifoElement   element1 = {.id = 0x123, .len = 8, .data = { 0, 1, 2, 3, 4, 5, 6, 7 }};
+  tFifoElement   element2 = {.id = 0x456, .len = 4, .data = { 0xFF, 0xEE, 0xDD, 0xCC }};
+  tFifoElement   element3 = {.id = 0x789, .len = 2, .data = { 0xAA, 0x55 }};
+  tFifoElement   element4 = {.id = 0xABC, .len = 3, .data = { 0x11, 0x22, 0x33 }};
 
   /* ------------------ Fixed size FIFO buffer --------------------------------------- */
   /* Create a new FIFO buffer that can hold up to three elements. */
@@ -287,7 +299,8 @@ void DemoDisplayElement(tFifoElement const * element)
 ** \return    Pointer to the newly created context if successful, NULL otherwise.
 **
 ****************************************************************************************/
-tFifoCtx * FifoBufferCreate(size_t maxSize, size_t elementSize)
+tFifoCtx * FifoBufferCreate(size_t maxSize, 
+                            size_t elementSize)
 {
   tFifoCtx * result = NULL;
   tFifoCtx * newCtx;
@@ -350,14 +363,15 @@ void FifoBufferDelete(tFifoCtx * ctx)
 ** \return    TBX_OK if the element could be stored. TBX_ERROR if the buffer is full.
 **
 ****************************************************************************************/
-uint8_t FifoBufferStore(tFifoCtx * ctx, void const * element)
+uint8_t FifoBufferStore(tFifoCtx       * ctx, 
+                        void     const * element)
 {
-  uint8_t result = TBX_ERROR;
-  uint8_t stillRoom = TBX_TRUE;
-  void * newElement;
+  uint8_t         result    = TBX_ERROR;
+  uint8_t         stillRoom = TBX_TRUE;
+  void          * newElement;
   uint8_t const * srcPtr;
-  uint8_t * destPtr;
-  size_t idx;
+  uint8_t       * destPtr;
+  size_t          idx;
 
   /* Verify the parameters. */
   TBX_ASSERT((ctx != NULL) && (element != NULL));
@@ -404,7 +418,8 @@ uint8_t FifoBufferStore(tFifoCtx * ctx, void const * element)
 ** \return    TBX_OK if an element was retrieved. TBX_ERROR if the buffer was empty.
 **
 ****************************************************************************************/
-uint8_t FifoBufferRetrieve(tFifoCtx * ctx, void * element)
+uint8_t FifoBufferRetrieve(tFifoCtx * ctx, 
+                           void     * element)
 {
   uint8_t result = TBX_ERROR;
   void * currentElement;
