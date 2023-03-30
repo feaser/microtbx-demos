@@ -10,3 +10,6 @@
 [submodule "third_party/hal/st/f0"]
 	path = third_party/hal/st/f0
 	url = https://github.com/STMicroelectronics/stm32f0xx_hal_driver.git
+[submodule "third_party/microtbx-modbus"]
+	path = third_party/microtbx-modbus
+	url = https://github.com/feaser/microtbx-modbus.git
