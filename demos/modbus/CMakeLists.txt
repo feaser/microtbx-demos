@@ -115,7 +115,9 @@ target_link_libraries(client_rtu_freertos_demo INTERFACE
 )
 
 # Create microtbx_modbus_MISRA for MISRA checking with cppcheck.
+if(MISRA_ENABLED)
 include("${CMAKE_SOURCE_DIR}/third_party/microtbx-modbus/source/misra.cmake")
+endif()
 
 # Include all supported boards and the common sources
 add_subdirectory(common)

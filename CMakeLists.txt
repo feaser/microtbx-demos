@@ -10,6 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 # Specify overall project name.
 project(apps LANGUAGES C CXX ASM)
 
+# Option to disable the generation of the MISRA Cppcheck targets. Override on the command
+# line when CMake is called using the following parameter: -DMISRA_ENABLED=ON
+option(MISRA_ENABLED "Configurable to enable/disable the MISRA Cppcheck target" OFF)
+
 # Include the MicroTBX sources.
 add_subdirectory(third_party/microtbx)
 

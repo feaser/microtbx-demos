@@ -74,7 +74,9 @@ target_link_libraries(sort_list_demo INTERFACE
 )
 
 # Create microtbx_MISRA for MISRA checking with cppcheck.
+if(MISRA_ENABLED)
 include("${CMAKE_SOURCE_DIR}/third_party/microtbx/source/misra.cmake")
+endif()
 
 # Include all supported boards.
 add_subdirectory(ARM_CORTEXM_ST_Nucleo_F091RC)
