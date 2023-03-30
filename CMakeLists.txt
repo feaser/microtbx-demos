@@ -13,7 +13,11 @@ project(apps LANGUAGES C CXX ASM)
 # Include the MicroTBX sources.
 add_subdirectory(third_party/microtbx)
 
+# Include the MicroTBX-Modbus sources.
+add_subdirectory(third_party/microtbx-modbus)
+
 # Include other third party components.
+include("${CMAKE_SOURCE_DIR}/.cmake/FreeRTOS.cmake")
 include("${CMAKE_SOURCE_DIR}/.cmake/CubeF0.cmake")
 
 # Include the demos sources.
