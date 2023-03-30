@@ -2,7 +2,7 @@ These demo programs are targeted towards an ST [Nucleo-F091RC](https://www.st.co
 
 # Prerequisites
 
-It is assumed that [CMake](https://cmake.org/) the [ARM GCC Embedded toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm) are installed on the system and available on the PATH. Additionally, the GNU tools *make* and *rm* should be installed and available on the path. Windows users can install the [GNU MCU Eclipse Windows Build Tools](https://gnu-mcu-eclipse.github.io/windows-build-tools/) for this. On a Debian/Ubuntu based system, the GNU tools can be installed with the following command:
+It is assumed that [CMake](https://cmake.org/), [Cppcheck](https://cppcheck.sourceforge.io/) and the [ARM GCC Embedded toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm) are installed on the system and available on the PATH. Additionally, the GNU tools *make* and *rm* should be installed and available on the path. Windows users can install the [GNU MCU Eclipse Windows Build Tools](https://gnu-mcu-eclipse.github.io/windows-build-tools/) for this. On a Debian/Ubuntu based system, the GNU tools can be installed with the following command:
 
 ```sh
 sudo apt-get install build-essential
