@@ -13,3 +13,6 @@
 [submodule "third_party/microtbx-modbus"]
 	path = third_party/microtbx-modbus
 	url = https://github.com/feaser/microtbx-modbus.git
+[submodule "third_party/freertos"]
+	path = third_party/freertos
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
