@@ -7,7 +7,7 @@ on:
       - main
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Install dependencies
         run: sudo apt-get install binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi
