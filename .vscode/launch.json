@@ -22,6 +22,25 @@
           "break main",
           "continue"
       ]
+    },
+    {
+      "name": "NucleoF429ZI",
+      "cwd": "${workspaceFolder}",
+      "executable": "${command:cmake.launchTargetPath}",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "gdbPath": "arm-none-eabi-gdb",
+      "configFiles": [
+        "board/st_nucleo_f4.cfg"
+        ],
+      "svdFile": "${workspaceFolder}/demos/base/ARM_CORTEXM_ST_Nucleo_F429ZI/STM32F429.svd",
+      "runToEntryPoint": "main",
+      // Give restart the same functionality as runToEntryPoint - main
+      "postRestartCommands": [
+          "break main",
+          "continue"
+      ]
     }
   ]
 }
