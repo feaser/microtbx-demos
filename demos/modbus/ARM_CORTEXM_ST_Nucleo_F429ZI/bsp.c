@@ -199,11 +199,11 @@ void BspDigitalOut(tBspDigitalOut pin,
   {
     if (value != TBX_OFF)
     {
-      HAL_GPIO_WritePin(GPIOB, pinMask[pin], GPIO_PIN_SET);      
+      HAL_GPIO_WritePin(GPIOB, pinMask[pin], GPIO_PIN_SET);
     }
     else
     {
-      HAL_GPIO_WritePin(GPIOB, pinMask[pin], GPIO_PIN_RESET);      
+      HAL_GPIO_WritePin(GPIOB, pinMask[pin], GPIO_PIN_RESET);
     }
   }
 } /*** end of BspDigitalOut ***/
