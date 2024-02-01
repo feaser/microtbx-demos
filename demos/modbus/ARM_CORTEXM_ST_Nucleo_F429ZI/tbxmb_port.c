@@ -4,30 +4,29 @@
 * \details      This MicroTBX-Modbus port for the Nucleo-F429ZI board supports three
 *               serial ports: 
 *
-*               TODO ##Vg Update this part for the board. Use USART3 for PORT2.
-*
-*                 - TBX_MB_UART_PORT1 = USART1
-*                 - TBX_MB_UART_PORT2 = USART2
-*                 - TBX_MB_UART_PORT3 = USART3
+*                 - TBX_MB_UART_PORT1 = USART6
+*                 - TBX_MB_UART_PORT2 = USART3
+*                 - TBX_MB_UART_PORT3 = USART2
 *               
-*               On the Nucleo-F091RC board, USART2 on PA2 and PA3 is connected to the
+*               On the Nucleo-F429ZI board, USART3 on PD8 and PD9 is connected to the
 *               on-board ST-Link/V2.1 debugger interface, which exposes it as a virtual
 *               COM-port on the PC using the USB-CDC class.
 *
-*               USART1 is configured for PA9 and PA10 with the idea that it's used in
+*               USART6 is configured for PG9 and PG14 with the idea that it's used in
 *               combination with a Waveshare RS485/CAN shield. This Arduino type shield
 *               offers an RS485 transceiver, allowing MicroTBX-Modbus to be tested on
-*               an RS485 network.
+*               an RS485 network. Make sure to set the UART jumpers of RX2 and TX2 on the
+*               shield.
 *
 *               The RS485 transceiver on this shield has the usual Driver Enable (DE) and
 *               Receiver Enable (RE) inputs. These inputs are connected together and can
-*               be controlled with the single PA8 digital output.
+*               be controlled with the single PF13 digital output.
 *
-*               USART3 is configured for PC10 and PC11 with the idea that you can connect
-*               these pins to USART1 PA9 and PA10 for a loopback between USART1 and
-*               USART3:
-*                 - PC10 = USART3_TX <--> USART1_RX = PA10
-*                 - PC11 = USART3_RX <--> USART1_TX = PA9
+*               USART2 is configured for PD5 and PD6 with the idea that you can connect
+*               these pins to USART6 PG9 and PG14 for a loopback between USART6 and
+*               USART2:
+*                 - PD5 = USART2_TX <--> USART6_RX = PG9
+*                 - PD6 = USART2_RX <--> USART6_TX = PG14
 *                
 *               In such a loopback configuration you could for example have both a client
 *               and a server on one and the same board, for testing and simulation
@@ -39,12 +38,12 @@
 *               Note that the implementation of this MicroTBX-Modbus port assumes that
 *               the following topics are handled by the application, upon initialization:
 *
-*                 - Enabling of the USART1, USART2, USART3 and TIM7 peripheral clocks.
-*                 - Configuration of the USART1, USART2, USART3 and RS485 DE/NRE GPIO
+*                 - Enabling of the USART2, USART3, USART6 and TIM7 peripheral clocks.
+*                 - Configuration of the USART2, USART3, USART6 and RS485 DE/NRE GPIO
 *                   pins. 
 *                 - Configuration and enabling of the TIM7 free running counter to count
 *                   upwards at a speed of 20 kHz.
-*                 - Enabling the USART1, USART2 and USART3 interrupts in the NVIC.
+*                 - Enabling the USART2, USART3 and USART6 interrupts in the NVIC.
 *
 *               In the demo programs, this is handled by function BspInit(). 
 * \internal
@@ -85,6 +84,7 @@
 ****************************************************************************************/
 #include "microtbx.h"                            /* MicroTBX library                   */
 #include "microtbxmodbus.h"                      /* MicroTBX-Modbus library            */
+#include "stm32f4xx.h"                           /* STM32 CPU and HAL                  */
 
 
 /****************************************************************************************
@@ -220,23 +220,33 @@ uint8_t TbxMbPortUartTransmit(tTbxMbUartPort         port,
 ****************************************************************************************/
 uint16_t TbxMbPortTimerCount(void)
 {
-  /* TODO ##Port 
-   * 
-   * Read out the current value of the timer's free running counter and return it.
-   * 
-   * This assumes you already initialized a timer, during application initialization, to
-   * have its free running counter counting upwards at 20 kHz. With other words, each
-   * count of the free running counter equals 50 microseconds.
-   * 
-   * Theoretically you could also use a timer to generate an interrupt every 50 us. The 
-   * interrupt service routine then increments a 16-bit unsigned integer counter. This
-   * function would then return this counter value. However, this interrupt driven timer
-   * approach would cause a high interrupt load. It is therefore better from a run-time
-   * performance perspective to simply  configure your timer to increment its free
-   * running counter every 50 microseconds.
-   */
+  static uint8_t           initialized = TBX_FALSE;
+  static TIM_HandleTypeDef timHandle   = {0};
 
-  return 0U;
+  /* Perform one-time initialization. */
+  if (initialized == TBX_FALSE)
+  {
+    initialized = TBX_TRUE;
+    /* According to the clock tree diagram in the RCC chapter of the reference manual,
+     * the PCLK1-TIM frequency = PLCK1 * 1, when the APB1 prescaler is 1, otherwise it is
+     * PCLK1 * 2.
+     */
+    uint8_t timMultiplier = 1U;
+    if ((RCC->CFGR & RCC_CFGR_PPRE1) != RCC_CFGR_PPRE1_DIV1)
+    {
+      timMultiplier = 2U;
+    }
+    uint32_t timFreq = HAL_RCC_GetPCLK1Freq() * timMultiplier;
+    timHandle.Instance = TIM7;
+    timHandle.Init.Prescaler = (timFreq / 20000U) - 1U;
+    timHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    timHandle.Init.Period = 65535;
+    timHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    HAL_TIM_Base_Init(&timHandle);
+    __HAL_TIM_ENABLE(&timHandle);
+  }
+  /* Read out the current value of the timer's free running counter and return it. */
+  return (uint16_t)__HAL_TIM_GET_COUNTER(&timHandle);
 } /*** end of TbxMbPortTimerCount ***/
 
 

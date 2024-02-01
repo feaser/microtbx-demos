@@ -89,11 +89,15 @@ void BspInit(void)
   /* Enable peripheral clocks. */
   __HAL_RCC_SYSCFG_CLK_ENABLE();
   __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_RCC_USART2_CLK_ENABLE();
   __HAL_RCC_USART3_CLK_ENABLE();
+  __HAL_RCC_USART6_CLK_ENABLE();
+  __HAL_RCC_TIM7_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /* Set interrupt group priority. Needs to be NVIC_PRIORITYGROUP_4 for FreeRTOS. */
   HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);  
@@ -105,7 +109,9 @@ void BspInit(void)
    */
   HAL_NVIC_SetPriority(PendSV_IRQn,  15U, 0U);
   HAL_NVIC_SetPriority(SysTick_IRQn, 15U, 0U);
+  HAL_NVIC_SetPriority(USART2_IRQn,  10U, 0U);
   HAL_NVIC_SetPriority(USART3_IRQn,  10U, 0U);
+  HAL_NVIC_SetPriority(USART6_IRQn,  10U, 0U);
 
   /* Configure the digital input GPIO pins:
    *   - PC13 = Pushbutton (has external pull-down) = BSP_DIGITAL_IN1
@@ -131,6 +137,14 @@ void BspInit(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_5, GPIO_PIN_RESET);
 
+  /* USART2 TX and RX GPIO pin configuration. */
+  GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
   /* USART3 TX and RX GPIO pin configuration. */
   GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -139,8 +153,26 @@ void BspInit(void)
   GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+  /* Configure the USART6 RS485 transceiver DE/NRE GPIO pin. */
+  HAL_GPIO_WritePin(GPIOF, GPIO_PIN_13, GPIO_PIN_RESET);
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /* USART6 TX and RX GPIO pin configuration. */
+  GPIO_InitStruct.Pin = GPIO_PIN_9 | GPIO_PIN_14;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
   /* Enable interrupts in the NVIC. Note that FreeRTOS handles PendSV and SysTick. */
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
   HAL_NVIC_EnableIRQ(USART3_IRQn);
+  HAL_NVIC_EnableIRQ(USART6_IRQn);
 
   /* Enable the interrupts. */
   __enable_irq();
