@@ -126,11 +126,16 @@ void BspInit(void)
    * configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY if the associated interrupt handlers
    * make use of FreeRTOS API calls.
    */
-  HAL_NVIC_SetPriority(PendSV_IRQn,  15U, 0U);
-  HAL_NVIC_SetPriority(SysTick_IRQn, 15U, 0U);
-  HAL_NVIC_SetPriority(USART2_IRQn,  10U, 0U);
-  HAL_NVIC_SetPriority(USART3_IRQn,  10U, 0U);
-  HAL_NVIC_SetPriority(USART6_IRQn,  10U, 0U);
+  HAL_NVIC_SetPriority(MemoryManagement_IRQn,  0U,  0U);
+  HAL_NVIC_SetPriority(BusFault_IRQn,          0U,  0U);
+  HAL_NVIC_SetPriority(UsageFault_IRQn,        0U,  0U);
+  HAL_NVIC_SetPriority(SVCall_IRQn,            0U,  0U);
+  HAL_NVIC_SetPriority(DebugMonitor_IRQn,      0U,  0U);
+  HAL_NVIC_SetPriority(PendSV_IRQn,            15U, 0U);
+  HAL_NVIC_SetPriority(SysTick_IRQn,           15U, 0U);
+  HAL_NVIC_SetPriority(USART2_IRQn,            10U, 0U);
+  HAL_NVIC_SetPriority(USART3_IRQn,            10U, 0U);
+  HAL_NVIC_SetPriority(USART6_IRQn,            10U, 0U);
 
   /* Configure the digital input GPIO pins:
    *   - PC13 = Pushbutton (has external pull-down) = BSP_DIGITAL_IN1
@@ -468,13 +473,17 @@ static void SystemClock_Config(void)
 ****************************************************************************************/
 /************************************************************************************//**
 ** \brief     SysTick interrupt handler. 
+** \attention Weak attribute was added, because in FreeRTOS demos, a function with the
+**            same name is used to process the system tick interrupt. The FreeRTOS
+**            implementation should have priority. In this case, the HAL tick is 
+**            handled in vApplicationTickHook().
 **
 ****************************************************************************************/
-void SysTick_Handler(void)
+__weak void SysTick_Handler(void)
 {
   /* Inform the HAL timebase about the event. */
   HAL_IncTick();
-}
+} /*** end of SysTick_Handler ***/
 
 
 /*********************************** end of bsp.c **************************************/
