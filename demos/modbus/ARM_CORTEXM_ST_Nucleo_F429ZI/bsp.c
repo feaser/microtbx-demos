@@ -11,8 +11,8 @@
 *               
 *               PWM Outputs
 *               -----------
-*               D5  = PB4  = TIM3_CH1 = BSP_PWM_OUT1  TODO ##Vg Update
-*               D11 = PA7  = TIM3_CH2 = BSP_PWM_OUT2  TODO ##Vg Update
+*               D16 = PC6  = TIM3_CH1 = BSP_PWM_OUT1
+*               D21 = PC7  = TIM3_CH2 = BSP_PWM_OUT2
 *               
 *               Digital Inputs
 *               --------------
@@ -66,6 +66,13 @@
 
 
 /****************************************************************************************
+* Local data declarations
+****************************************************************************************/
+/** \brief Handle to the TIM peripheral which will be used for the PWM outputs. */
+static TIM_HandleTypeDef pwmTimHandle = {0};
+
+
+/****************************************************************************************
 * Function prototypes
 ****************************************************************************************/
 static void SystemClock_Config(void);
@@ -92,6 +99,7 @@ void BspInit(void)
   __HAL_RCC_USART2_CLK_ENABLE();
   __HAL_RCC_USART3_CLK_ENABLE();
   __HAL_RCC_USART6_CLK_ENABLE();
+  __HAL_RCC_TIM3_CLK_ENABLE();
   __HAL_RCC_TIM7_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -136,6 +144,52 @@ void BspInit(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /* TIM3 GPIO configuration for PWM outputs:
+   *   - PC6 = TIM3 channel 1 = D16 = BSP_PWM_OUT1
+   *   - PC7 = TIM3 channel 2 = D21 = BSP_PWM_OUT2
+   */
+  GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /* TIM3 configuration for 1 kHz PWM outputs with an 8-bit duty cycle, driven by 
+   * APB1/PCLK1. Start by setting the TIM peripheral to use.
+   */
+  pwmTimHandle.Instance = TIM3;
+  /* According to the clock tree diagram in the RCC chapter of the reference manual,
+   * the PCLK1-TIM frequency = PLCK1 * 1, when the APB1 prescaler is 1, otherwise it is
+    * PCLK1 * 2.
+    */
+  uint8_t timMultiplier = 1U;
+  if ((RCC->CFGR & RCC_CFGR_PPRE1) != RCC_CFGR_PPRE1_DIV1)
+  {
+    timMultiplier = 2U;
+  }
+  uint32_t timFreq = HAL_RCC_GetPCLK1Freq() * timMultiplier;
+  pwmTimHandle.Init.Prescaler         = (timFreq / (1000U * 256U)) - 1U;
+  pwmTimHandle.Init.Period            = 255U;
+  pwmTimHandle.Init.ClockDivision     = 0U;
+  pwmTimHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+  pwmTimHandle.Init.RepetitionCounter = 0U;
+  pwmTimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  HAL_TIM_PWM_Init(&pwmTimHandle);
+  /* TIM3 channel 1 and 2 configuration for PWM output generation. */
+  TIM_OC_InitTypeDef pwmChannelConfig = {0};
+  pwmChannelConfig.OCMode       = TIM_OCMODE_PWM1;
+  pwmChannelConfig.OCPolarity   = TIM_OCPOLARITY_HIGH;
+  pwmChannelConfig.OCFastMode   = TIM_OCFAST_DISABLE;
+  pwmChannelConfig.OCNPolarity  = TIM_OCNPOLARITY_HIGH;
+  pwmChannelConfig.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  pwmChannelConfig.OCIdleState  = TIM_OCIDLESTATE_RESET;
+  pwmChannelConfig.Pulse        = 0U;
+  HAL_TIM_PWM_ConfigChannel(&pwmTimHandle, &pwmChannelConfig, TIM_CHANNEL_1);
+  HAL_TIM_PWM_ConfigChannel(&pwmTimHandle, &pwmChannelConfig, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&pwmTimHandle, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&pwmTimHandle, TIM_CHANNEL_2);
 
   /* USART2 TX and RX GPIO pin configuration. */
   GPIO_InitStruct.Pin = GPIO_PIN_5 | GPIO_PIN_6;
@@ -251,7 +305,30 @@ uint8_t BspDigitalIn(tBspDigitalIn pin)
 void BspPwmOut(tBspPwmOut pin,
                uint8_t    duty)
 {
-  /* TODO ##Vg Implement BspPwmOut(). */
+  static uint8_t currentDuty[BSP_NUM_PWM_OUT] = {0};
+
+  /* Verify parameters. */
+  TBX_ASSERT(pin < BSP_NUM_PWM_OUT);
+
+  /* Only continue with valid parameters. */
+  if (pin < BSP_NUM_PWM_OUT)
+  {
+    /* Did the duty-cycle actually change? */
+    if (currentDuty[pin] != duty)
+    {
+      /* Update the duty-cycle. */
+      if (pin == BSP_PWM_OUT1)
+      {
+        __HAL_TIM_SET_COMPARE(&pwmTimHandle, TIM_CHANNEL_1, duty);
+      }
+      else
+      {
+        __HAL_TIM_SET_COMPARE(&pwmTimHandle, TIM_CHANNEL_2, duty);
+      }
+      /* Store the new duty-cycle for change detection. */
+      currentDuty[pin] = duty;
+    }
+  }
 } /*** end of BspPwmOut ***/
 
 
