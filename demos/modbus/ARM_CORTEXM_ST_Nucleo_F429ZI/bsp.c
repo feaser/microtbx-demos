@@ -1,7 +1,7 @@
 /************************************************************************************//**
 * \file         demos/modbus/ARM_CORTEXM_ST_Nucleo_F429ZI/bsp.c
 * \brief        Board support package source file.
-* \details      This board support package for the Nucleo-F091RC implements the following
+* \details      This board support package for the Nucleo-F429ZI implements the following
 *               pin mapping:
 *
 *               Digital Outputs
@@ -21,8 +21,8 @@
 *               
 *               Analog Inputs
 *               -------------
-*               A5  = PC0  = ADC_IN10 = BSP_ANALOG_IN1 TODO ##Vg Update
-*               A4  = PC1  = ADC_IN11 = BSP_ANALOG_IN2 TODO ##Vg Update
+*               A5  = PF10 = ADC3_IN8 = BSP_ANALOG_IN1
+*               A3  = PF3  = ADC3_IN9 = BSP_ANALOG_IN2
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
@@ -71,6 +71,15 @@
 /** \brief Handle to the TIM peripheral which will be used for the PWM outputs. */
 static TIM_HandleTypeDef pwmTimHandle = {0};
 
+/** \brief Handle to the ADC peripheral which will conver the analog inputs. */
+static ADC_HandleTypeDef adcHandle = {0};
+
+/** \brief Handle to the DMA peripheral which will be used for storing ADC conversions.*/
+static DMA_HandleTypeDef adcDmaHandle = {0};
+
+/** \brief Buffer where the DMA stores the analog to digital conversion results. */
+static volatile uint16_t adcResult[BSP_NUM_ANALOG_IN] = { 0 };
+
 
 /****************************************************************************************
 * Function prototypes
@@ -101,6 +110,8 @@ void BspInit(void)
   __HAL_RCC_USART6_CLK_ENABLE();
   __HAL_RCC_TIM3_CLK_ENABLE();
   __HAL_RCC_TIM7_CLK_ENABLE();
+  __HAL_RCC_ADC3_CLK_ENABLE(); 
+  __HAL_RCC_DMA2_CLK_ENABLE();   
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -144,6 +155,15 @@ void BspInit(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0 | GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /* Configure the analog input GPIO pins:
+   *   - PF10 = A5  = ADC3_IN8 = BSP_ANALOG_IN1
+   *   - PF3  = A3  = ADC3_IN9 = BSP_ANALOG_IN2
+   */
+  GPIO_InitStruct.Pin = GPIO_PIN_3 | GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
   /* TIM3 GPIO configuration for PWM outputs:
    *   - PC6 = TIM3 channel 1 = D16 = BSP_PWM_OUT1
@@ -222,6 +242,48 @@ void BspInit(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+  /* DMA2 stream 0 channel 2 configuration for storing the ADC3 conversion results. */
+  adcDmaHandle.Instance = DMA2_Stream0;
+  adcDmaHandle.Init.Channel = DMA_CHANNEL_2;
+  adcDmaHandle.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  adcDmaHandle.Init.PeriphInc = DMA_PINC_DISABLE;
+  adcDmaHandle.Init.MemInc = DMA_MINC_ENABLE;
+  adcDmaHandle.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+  adcDmaHandle.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+  adcDmaHandle.Init.Mode = DMA_CIRCULAR;
+  adcDmaHandle.Init.Priority = DMA_PRIORITY_HIGH;
+  adcDmaHandle.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+  HAL_DMA_Init(&adcDmaHandle);
+  /* Link the ADC and DMA handles. */
+  __HAL_LINKDMA(&adcHandle, DMA_Handle, adcDmaHandle);
+  /* Configure the global features of the ADC for continuous scan mode of the ADC
+   * channels 8 and 9 in combination with DMA for storing the results.
+   */
+  adcHandle.Instance = ADC3;
+  adcHandle.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  adcHandle.Init.Resolution = ADC_RESOLUTION_10B;
+  adcHandle.Init.ScanConvMode = ENABLE;
+  adcHandle.Init.ContinuousConvMode = ENABLE;
+  adcHandle.Init.DiscontinuousConvMode = DISABLE;
+  adcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  adcHandle.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  adcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  adcHandle.Init.NbrOfConversion = 2;
+  adcHandle.Init.DMAContinuousRequests = ENABLE;
+  adcHandle.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  HAL_ADC_Init(&adcHandle);
+  /* Configure the regular channels. */
+  ADC_ChannelConfTypeDef adcChannelConfig = {0};
+  adcChannelConfig.Channel = ADC_CHANNEL_8;
+  adcChannelConfig.Rank = 1;
+  adcChannelConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+  HAL_ADC_ConfigChannel(&adcHandle, &adcChannelConfig);
+  adcChannelConfig.Channel = ADC_CHANNEL_9;
+  adcChannelConfig.Rank = 2;
+  HAL_ADC_ConfigChannel(&adcHandle, &adcChannelConfig);
+  /* Enable ADC and start the continuous conversion. */
+  HAL_ADC_Start_DMA(&adcHandle, (uint32_t *)&adcResult, 2);
 
   /* Enable interrupts in the NVIC. Note that FreeRTOS handles PendSV and SysTick. */
   HAL_NVIC_EnableIRQ(USART2_IRQn);
@@ -342,8 +404,15 @@ uint16_t BspAnalogIn(tBspAnalogIn pin)
 {
   uint16_t result = 0U;
 
-  /* TODO ##Vg Implement BspAnalogIn(). */
+  /* Verify parameters. */
+  TBX_ASSERT(pin < BSP_NUM_ANALOG_IN);
 
+  /* Only continue with valid parameters. */
+  if (pin < BSP_NUM_ANALOG_IN)
+  {
+    /* Store the ADC conversion result of the specific analog input. */
+    result = adcResult[pin];
+  }
   /* Give the result back to the caller. */
   return result;
 } /*** end of BspAnalogIn ***/
