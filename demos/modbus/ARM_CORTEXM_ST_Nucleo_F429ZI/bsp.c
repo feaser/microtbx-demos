@@ -99,6 +99,9 @@ void BspInit(void)
   /* Disable the interrupts. */
   __disable_irq();
 
+  /* Initialize the HAL. */
+  HAL_Init();
+
   /* Configure the system clock. */
   SystemClock_Config();
 
