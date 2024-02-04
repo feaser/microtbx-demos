@@ -21,5 +21,5 @@ add_subdirectory(serverrtu_cplusplus)
 add_subdirectory(serverrtu_freertos)
 add_subdirectory(clientrtu)
 add_subdirectory(clientrtu_cplusplus)
-#add_subdirectory(clientrtu_freertos)
+add_subdirectory(clientrtu_freertos)
 
