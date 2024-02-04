@@ -150,7 +150,7 @@
 #define  TICK_INT_PRIORITY            0U   /*!< tick interrupt priority */
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              1U
-#define  INSTRUCTION_CACHE_ENABLE     1U
+#define  INSTRUCTION_CACHE_ENABLE     0U
 #define  DATA_CACHE_ENABLE            1U
 
 #define  USE_HAL_ADC_REGISTER_CALLBACKS         0U /* ADC register callback disabled       */
