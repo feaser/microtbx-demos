@@ -16,3 +16,9 @@
 [submodule "third_party/freertos"]
 	path = third_party/freertos
 	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+[submodule "third_party/cmsis/device/st/f4"]
+	path = third_party/cmsis/device/st/f4
+	url = https://github.com/STMicroelectronics/cmsis_device_f4.git
+[submodule "third_party/hal/st/f4"]
+	path = third_party/hal/st/f4
+	url = https://github.com/STMicroelectronics/stm32f4xx_hal_driver.git

@@ -122,4 +122,5 @@ endif()
 # Include all supported boards and the common sources
 add_subdirectory(common)
 add_subdirectory(ARM_CORTEXM_ST_Nucleo_F091RC)
+add_subdirectory(ARM_CORTEXM_ST_Nucleo_F429ZI)
 

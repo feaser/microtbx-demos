@@ -26,6 +26,17 @@ target_include_directories(freertos-arm-cm0 INTERFACE
     "${CMAKE_SOURCE_DIR}/third_party/freertos/portable/GCC/ARM_CM0"
 )
 
+# Create interface library for the ARM Cortex-M4 port sources.
+add_library(freertos-arm-cm4 INTERFACE)
+
+target_sources(freertos-arm-cm4 INTERFACE
+    "${CMAKE_SOURCE_DIR}/third_party/freertos/portable/GCC/ARM_CM4F/port.c"
+)
+
+target_include_directories(freertos-arm-cm4 INTERFACE
+    "${CMAKE_SOURCE_DIR}/third_party/freertos/portable/GCC/ARM_CM4F"
+)
+
 # Create interface library for the Heap 1 memory manager sources.
 add_library(freertos-heap1 INTERFACE)
 

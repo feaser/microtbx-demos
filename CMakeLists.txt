@@ -23,6 +23,7 @@ add_subdirectory(third_party/microtbx-modbus)
 # Include other third party components.
 include("${CMAKE_SOURCE_DIR}/.cmake/FreeRTOS.cmake")
 include("${CMAKE_SOURCE_DIR}/.cmake/CubeF0.cmake")
+include("${CMAKE_SOURCE_DIR}/.cmake/CubeF4.cmake")
 
 # Include the demos sources.
 add_subdirectory(demos)
