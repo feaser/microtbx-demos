@@ -17,7 +17,7 @@ jobs:
           submodules: true
       - name: Generate build environment
         working-directory: build
-        run: cmake ..
+        run: cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ..
       - name: Clean the build environment
         working-directory: build
         run: make clean
